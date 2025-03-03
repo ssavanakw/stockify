@@ -12,6 +12,7 @@ class Report extends Model
         'title', 
         'description', 
         'user_id',
+        'role',
         'status', 
 
     ];

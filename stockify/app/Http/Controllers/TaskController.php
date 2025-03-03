@@ -66,7 +66,7 @@ class TaskController extends Controller
     public function create()
     {
         $staff = User::where('role', 'staff')->where('can_receive_tasks', true)->get();
-    return view('tasks.create', compact('staff'));
+        return view('tasks.create', compact('staff'));
 
     }
 

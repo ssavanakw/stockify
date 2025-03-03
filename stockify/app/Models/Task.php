@@ -12,8 +12,8 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'user_id', // User yang mengerjakan tugas
         'status', // Pending, In Progress, Done
+        'user_id', // User yang mengerjakan tugas
         'created_by',
 
     ];
