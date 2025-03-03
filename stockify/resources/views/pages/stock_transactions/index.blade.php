@@ -13,15 +13,15 @@
     <table class="table table-bordered shadow-lg">
         <thead>
             <tr class="bg-gray">
-                <th>ID</th>
-                <th>Material</th>
-                <th>Type</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Date</th>
+                <th class="text-center">No</th>
+                <th class="text-center">Material</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Date</th>
                 <th>Description</th>
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
-                <th>Action</th>
+                <th class="text-center" width="100px">Action</th>
                 @endif
             </tr>
         </thead>
