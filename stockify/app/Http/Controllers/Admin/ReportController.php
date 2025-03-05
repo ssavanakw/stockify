@@ -4,29 +4,27 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\ReportRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Routing\Attributes\Middleware;
-
+use App\Services\ReportService;
 
 class ReportController extends Controller
 {
-    protected $reportRepository;
+    protected $reportService;
 
-    public function __construct(ReportRepositoryInterface $reportRepository)
+    public function __construct(ReportService $reportService)
     {
-        $this->reportRepository = $reportRepository;
+        $this->reportService = $reportService;
     }
 
     public function index()
     {
-        $reports = $this->reportRepository->getAll();
+        $reports = $this->reportService->getAll();
         return view('pages.reports.index', compact('reports'));
     }
 
     public function show($id)
     {
-        $report = $this->reportRepository->getById($id);
+        $report = $this->reportService->getById($id);
         return view('reports.show', compact('report'));
     }
 
@@ -40,18 +38,18 @@ class ReportController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'status' => 'required|in:pending,resolved',
+            'status' => 'required|in:pending,completed',
         ]);
 
         $data['user_id'] = Auth::id();
 
-        $this->reportRepository->create($data);
+        $this->reportService->create($data);
         return redirect()->route('reports.index')->with('success', 'Report created successfully');
     }
 
     public function edit($id)
     {
-        $report = $this->reportRepository->getById($id);
+        $report = $this->reportService->getById($id);
         return view('reports.edit', compact('report'));
     }
 
@@ -63,13 +61,14 @@ class ReportController extends Controller
             'status' => 'required|in:pending,resolved',
         ]);
 
-        $this->reportRepository->update($id, $data);
+        $this->reportService->update($id, $data);
         return redirect()->route('reports.index')->with('success', 'Report updated successfully');
     }
 
     public function delete($id)
     {
-        $this->reportRepository->delete($id);
+        $this->reportService->delete($id);
         return redirect()->route('reports.index')->with('success', 'Report deleted successfully');
     }
+    
 }

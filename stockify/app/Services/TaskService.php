@@ -11,7 +11,7 @@ class TaskService
     public function completeTask($taskId)
     {
         $task = Task::findOrFail($taskId);
-        $task->status = 'Done';
+        $task->status = 'completed';
         $task->save();
 
         // Simpan tugas ke laporan

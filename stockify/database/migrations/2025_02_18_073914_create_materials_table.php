@@ -20,9 +20,11 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
 
-            $table->foreign('category_id')->references('id')->on('categories')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            // Foreign key
+            $table->foreign('category_id')
+                  ->references('id')->on('categories')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 
@@ -31,6 +33,17 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // First, drop foreign key constraints from other tables that reference 'materials'
+        Schema::table('stocks', function (Blueprint $table) {
+            $table->dropForeign(['material_id']);
+        });
+
+        // Then drop foreign key from 'materials' itself
+        Schema::table('materials', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+        });
+
+        // Now safely drop the materials table
         Schema::dropIfExists('materials');
     }
 };

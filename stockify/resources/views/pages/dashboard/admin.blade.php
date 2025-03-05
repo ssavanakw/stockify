@@ -30,34 +30,34 @@
     </div>
 
     <div class="col-lg-3 col-6">
-        <!-- Category box -->
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>{{ $categoryCount }}</h3>
-                <p>Category</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="/categories" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    <!-- Category box -->
+    <div class="small-box bg-success">
+        <div class="inner">
+            <h3>{{ $categoryCount }}</h3>
+            <p>Category</p>
         </div>
+        <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+        </div>
+        <a href="/categories" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
     </div>
+</div>
 
-    @if(auth()->user()->role === 'admin')
-    <div class="col-lg-3 col-6">
-        <!-- Users box (only visible to admin) -->
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{ $userCount }}</h3>
-                <p>Users</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+@if(auth()->user()->role === 'admin')
+<div class="col-lg-3 col-6">
+    <!-- Users box (only visible to admin) -->
+    <div class="small-box bg-warning">
+        <div class="inner">
+            <h3>{{ $userCount }}</h3>
+            <p>Users</p>
         </div>
+        <div class="icon">
+            <i class="ion ion-person-add"></i>
+        </div>
+        <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
     </div>
-    @endif
+</div>
+@endif
 
     <div class="col-lg-3 col-6">
         <!-- Supplier box -->
@@ -70,6 +70,20 @@
                 <i class="fas fa-truck"></i>
             </div>
             <a href="/suppliers" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+    <!-- Transaction box -->
+    <div class="small-box bg-purple"> <!-- Menggunakan warna ungu -->
+        <div class="inner">
+            <h3>{{ $transactionCount }}</h3> <!-- Data transaksi dari controller -->
+            <p>Transaction</p>
+        </div>
+        <div class="icon">
+            <i class="fas fa-exchange-alt"></i> <!-- Icon transaksi -->
+        </div>
+        <a href="/transactions" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
@@ -90,13 +104,11 @@
     </div>
     @endif
 </div>
-
-
-
 <!-- Tambahkan Grafik di sini -->
 <div class="row">
-    <div class="col-lg-6">
-        <div class="card shadow-lg">
+    <!-- Material & Category Overview -->
+    <div class="col-md-6">
+        <div class="card d-flex flex-column shadow-lg">
             <div class="card-header">
                 <h3 class="card-title">Material & Category Overview</h3>
             </div>
@@ -106,8 +118,9 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <div class="card shadow-lg">
+    <!-- Users & Suppliers Overview -->
+    <div class="col-md-6">
+        <div class="card d-flex flex-column shadow-lg">
             <div class="card-header">
                 <h3 class="card-title">Users & Suppliers Overview</h3>
             </div>
@@ -117,12 +130,53 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card d-flex flex-column shadow-lg">
+            <div class="card-header">
+                <h3 class="card-title">Overview Chart</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="overviewChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById("overviewChart").getContext("2d");
+
+        var chartData = JSON.parse('@json($overviewChartData)');
+
+        var overviewChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: "Total Count",
+                    data: chartData.data,
+                    backgroundColor: ["#17a2b8", "#28a745", "#ffc107", "#007bff", "#6f42c1", "#dc3545"]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+</script>
 
 <div class="row">
-    <!-- Assign Task -->
-    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
-    <div class="col-lg-6">
-        <div class="card shadow-lg w-100">
+    <div class="col-lg-12">
+        <!-- Assign Task -->
+        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
+        <div class="card shadow-lg w-100 mb-4">
             <div class="card-body">
                 <h2>Assign a New Task</h2>
                 <form action="{{ route('tasks.assign') }}" method="POST">
@@ -152,12 +206,10 @@
                 </form>
             </div>
         </div>
-    </div>
-    @endif
+        @endif
 
-    <!-- Job List -->
-    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager' || auth()->user()->role === 'staff')
-    <div class="col-lg-6">
+        <!-- Job List -->
+        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager' || auth()->user()->role === 'staff')
         <div class="card shadow-lg w-100">
             <div class="card-body">
                 <h2>Job</h2>
@@ -220,8 +272,8 @@
                 </table>
             </div>
         </div>
+        @endif
     </div>
-    @endif
 </div>
 
 @endsection

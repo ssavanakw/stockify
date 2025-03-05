@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use App\Models\Category;
 use App\Models\Report;
+use App\Models\StockTransaction;
 use App\Models\Supplier;
 use App\Models\Task;
 use App\Models\User;
@@ -51,6 +52,7 @@ class DashboardController extends Controller
         $supplierCount = Supplier::count();
         $reportCount = Report::count();
         $userCount = User::count();
+        $transactionCount = StockTransaction::count();
     
         $staffUsers = User::where('role', 'staff')->where('can_receive_tasks', true)->get();
     
@@ -66,13 +68,19 @@ class DashboardController extends Controller
                 ->where('user_id', $user->id)
                 ->get();
         }
-    
+
+
         // Tambahkan data untuk chart
         $materialData = [$materialCount, $categoryCount];
         $userData = [$userCount, $supplierCount];
+
+        $overviewChartData = [
+            'labels' => ['Material', 'Category', 'Users', 'Supplier', 'Transaction', 'Report'],
+            'data' => [$materialCount, $categoryCount, $userCount, $supplierCount, $transactionCount, $reportCount]
+        ];
     
         return view('pages.dashboard.admin', compact(
-            'materialCount', 'categoryCount', 'reportCount', 'supplierCount', 'userCount', 'staffUsers', 'pendingTasks', 'materialData', 'userData'
+            'materialCount', 'categoryCount', 'reportCount', 'supplierCount', 'transactionCount', 'userCount', 'staffUsers', 'pendingTasks', 'materialData', 'userData', 'overviewChartData'
         ));
     }
 }

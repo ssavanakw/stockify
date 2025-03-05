@@ -3,29 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function updatePassword(Request $request, $id)
+    protected $userService;
+
+    public function __construct(UserService $userService)
     {
-        $request->validate([
-            'new_password' => 'required|min:6|confirmed',
-        ]);
-
-        $user = User::findOrFail($id);
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-
-        return back()->with('success', 'Password updated successfully.');
+        $this->userService = $userService;
     }
 
     public function index()
     {
-        $users = User::paginate(10);
+        $users = $this->userService->getAllUsers();
         return view('pages.users.index', compact('users'));
     }
 
@@ -36,48 +29,48 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role' => ['required', Rule::in(['admin', 'manager', 'staff'])],
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
-
+        $this->userService->createUser($data);
         return redirect()->route('users.index')->with('success', 'User added successfully');
     }
 
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = $this->userService->getUserById($id);
         return view('pages.users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($id)],
             'role' => ['required', Rule::in(['admin', 'manager', 'staff'])],
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-        ]);
-
+        $this->userService->updateUser($id, $data);
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
-    public function destroy(User $user)
+    public function updatePassword(Request $request, $id)
     {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        $request->validate([
+            'new_password' => 'required|min:6|confirmed',
+        ]);
+
+        $this->userService->updatePassword($id, $request->new_password);
+        return back()->with('success', 'Password updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $this->userService->deleteUser($id);
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 }

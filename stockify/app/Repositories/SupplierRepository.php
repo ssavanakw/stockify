@@ -34,4 +34,9 @@ class SupplierRepository
         $supplier->delete();
         return true;
     }
+
+    public function getPaginatedSuppliers($perPage = 10)
+    {
+        return Supplier::paginate($perPage);
+    }
 }

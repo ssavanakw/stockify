@@ -17,12 +17,12 @@
                 @endforeach
             </select>
         </div>
-
         <div class="form-group">
             <label>Type</label>
             <select name="transaction_type" class="form-control" required>
-                <option value="in">Stock In</option>
-                <option value="out">Stock Out</option>
+                <option value="" disabled {{ old('transaction_type') ? '' : 'selected' }}>Select Type</option>
+                <option value="in" {{ old('transaction_type') == 'in' ? 'selected' : '' }}>Stock In</option>
+                <option value="out" {{ old('transaction_type') == 'out' ? 'selected' : '' }}>Stock Out</option>
             </select>
         </div>
 

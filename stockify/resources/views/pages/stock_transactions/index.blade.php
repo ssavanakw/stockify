@@ -10,6 +10,7 @@
     @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
     <a href="{{ route('stock-transactions.create') }}" class="btn btn-primary mb-3">Add Transaction</a>
     @endif
+
     <table class="table table-bordered shadow-lg">
         <thead>
             <tr class="bg-gray">
@@ -26,11 +27,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($transactions as $transaction)
+            @foreach($transactions as $index => $transaction)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ ($transactions->currentPage() - 1) * $transactions->perPage() + $index + 1 }}</td>
                     <td>{{ $transaction->material->name }}</td>
-                    <td>{{ $transaction->transaction_type == 'in' ? 'Stock In' : 'Stock Out' }}</td>
+                    <td>{{ $transaction->type === 'in' ? 'Stock In' : 'Stock Out' }}</td>
                     <td>{{ $transaction->quantity }}</td>
                     <td>Rp {{ number_format($transaction->price, 0, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M Y') }}</td>
@@ -48,5 +49,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="card-footer">
+        {{ $transactions->links('pagination::bootstrap-4') }}
+    </div>
+
 </div>
 @endsection

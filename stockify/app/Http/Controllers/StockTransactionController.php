@@ -21,7 +21,7 @@ class StockTransactionController extends Controller
 
     public function index()
     {
-        $transactions = StockTransaction::with('material')->latest()->get(); // Ambil data terbaru
+        $transactions = $this->stockTransactionService->getPaginatedTransactions();
         return view('pages.stock_transactions.index', compact('transactions'));
     }
 
@@ -39,39 +39,40 @@ class StockTransactionController extends Controller
             'transaction_type' => 'required|in:in,out',
             'description' => 'nullable|string|max:255',
         ]);
-
-        DB::transaction(function () use ($request) {
-            $material = Material::findOrFail($request->material_id);
-
-            if ($request->transaction_type == 'out' && $material->stock < $request->quantity) {
-                return back()->with('error', 'Stock not sufficient!');
-            }
-            
-            // Hapus titik pemisah ribuan dari input harga sebelum menyimpan
-            $price = $material->price; 
-
-            StockTransaction::create([
-                'material_id' => $request->material_id,
-                'quantity' => $request->quantity,
-                'price' => $price,
-                'transaction_type' => $request->transaction_type,
-                'description' => $request->description,
-                'user_id' => Auth::id(),
-                'transaction_date' => now(), // Set tanggal transaksi otomatis
-            ]);
-
-            // Update stok material
-            if ($request->transaction_type == 'in') {
-                $material->stock += $request->quantity;
-            } else {
-                $material->stock -= $request->quantity;
-            }
-            $material->touch();
-            $material->save();
-        });
-
-        return redirect()->route('stock-transactions.index')->with('success', 'Transaction added successfully!');
+    
+        try {
+            DB::transaction(function () use ($request) {
+                $material = Material::findOrFail($request->material_id);
+    
+                if ($request->transaction_type === 'out' && $material->stock < $request->quantity) {
+                    throw new \Exception('Stock not sufficient!');
+                }
+    
+                StockTransaction::create([
+                    'material_id' => $request->material_id,
+                    'quantity' => $request->quantity,
+                    'price' => $material->price,
+                    'transaction_type' => $request->transaction_type,
+                    'description' => $request->description,
+                    'user_id' => Auth::id(),
+                    'transaction_date' => now(),
+                ]);
+    
+                // Update stock
+                if ($request->transaction_type === 'in') {
+                    $material->stock += $request->quantity;
+                } else {
+                    $material->stock -= $request->quantity;
+                }
+                $material->save();
+            });
+    
+            return redirect()->route('stock-transactions.index')->with('success', 'Transaction added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('stock-transactions.index')->with('error', $e->getMessage());
+        }
     }
+
 
     public function destroy($id)
     {
@@ -79,10 +80,9 @@ class StockTransactionController extends Controller
             $transaction = StockTransaction::findOrFail($id);
             $material = Material::findOrFail($transaction->material_id);
 
-            // Kembalikan stok jika transaksi dibatalkan
-            if ($transaction->transaction_type == 'in') {
+            if ($transaction->transaction_type === 'in') {
                 $material->stock -= $transaction->quantity;
-            } else {
+            } elseif ($transaction->transaction_type === 'out') {
                 $material->stock += $transaction->quantity;
             }
             $material->save();

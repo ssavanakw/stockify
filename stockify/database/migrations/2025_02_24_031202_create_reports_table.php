@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status', ['pending', 'resolved', 'completed'])->default('pending');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('role'); // Tambahkan kolom role
+            $table->string('role')->default('staff'); // Tambahkan kolom role
             $table->timestamps();
         });
     }

@@ -17,8 +17,9 @@ class SupplierController extends Controller
 
     public function index()
     {
-        $suppliers = $this->supplierService->getAllSuppliers();
+        $suppliers = $this->supplierService->getPaginatedSuppliers(10); // 10 supplier per halaman
         return view('pages.suppliers.index', compact('suppliers'));
+
     }
 
     public function create()

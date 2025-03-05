@@ -8,6 +8,7 @@ class ReportRepository implements ReportRepositoryInterface
 {
     public function getAll()
     {
+        // dd('ReportService called!');
         return Report::orderBy('created_at', 'desc')->paginate(10);
     }
 

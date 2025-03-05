@@ -55,7 +55,7 @@
                             <label for="status" class="form-label">Status</label>
                             <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
                                 <option value="pending">Pending</option>
-                                <option value="resolved">Resolved</option>
+                                <option value="completed">Completed</option>
                             </select>
                             @error('status')
                                 <span class="invalid-feedback">{{ $message }}</span>

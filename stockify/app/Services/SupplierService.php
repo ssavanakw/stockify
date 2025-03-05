@@ -37,4 +37,11 @@ class SupplierService
     {
         return $this->supplierRepository->delete($id);
     }
+
+    public function getPaginatedSuppliers($perPage = 10)
+    {
+        return $this->supplierRepository->getPaginatedSuppliers($perPage);
+    }
+    
+    
 }

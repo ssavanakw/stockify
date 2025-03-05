@@ -22,4 +22,8 @@ class StockTransactionService
     {
         return $this->stockTransactionRepository->getAll();
     }
+    public function getPaginatedTransactions($perPage = 10)
+    {
+        return $this->stockTransactionRepository->paginateTransactions($perPage);
+    }
 }

@@ -15,6 +15,7 @@
     <table class="table table-bordered table-hover mt-3 shadow-lg" style="font-size: 18px;">
         <thead class="bg-gray">
             <tr>
+                <th>No</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -27,6 +28,7 @@
         <tbody>
             @foreach($suppliers as $supplier)
                 <tr>
+                    <td>{{ ($suppliers->currentPage() - 1) * $suppliers->perPage() + $loop->index + 1 }}</td>
                     <td>{{ $supplier->name }}</td>
                     <td>{{ $supplier->email }}</td>
                     <td>{{ $supplier->phone }}</td>
@@ -45,5 +47,8 @@
             @endforeach
         </tbody>
     </table>
+    <div class="mt-4">
+        {{ $suppliers->links('pagination::bootstrap-4') }}
+    </div>
 </div>
 @endsection

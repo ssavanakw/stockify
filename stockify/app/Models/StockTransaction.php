@@ -9,11 +9,23 @@ class StockTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['material_id', 'type', 'quantity', 'price', 'transaction_date', 'description'];
+    protected $fillable = [
+        'material_id', 
+        'type', 
+        'quantity', 
+        'price', 
+        'transaction_date', 
+        'description'
+    ];
 
     public function material()
     {
         return $this->belongsTo(Material::class);
+    }
+
+    public function getTransactionTypeAttribute($value)
+    {
+        return $value === 'in' ? 'Stock In' : 'Stock Out';
     }
 
 }
