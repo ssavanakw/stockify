@@ -4,39 +4,33 @@ namespace App\Repositories;
 
 use App\Models\Supplier;
 
-class SupplierRepository
+class SupplierRepository implements SupplierRepositoryInterface
 {
-    public function getAll()
+    public function getPaginatedSuppliers($perPage)
     {
-        return Supplier::all();
+        return Supplier::paginate($perPage);
     }
 
-    public function findById($id)
-    {
-        return Supplier::findOrFail($id);
-    }
-
-    public function create(array $data)
+    public function createSupplier(array $data)
     {
         return Supplier::create($data);
     }
 
-    public function update($id, array $data)
+    public function getSupplierById($id)
+    {
+        return Supplier::findOrFail($id);
+    }
+
+    public function updateSupplier($id, array $data)
     {
         $supplier = Supplier::findOrFail($id);
         $supplier->update($data);
         return $supplier;
     }
 
-    public function delete($id)
+    public function deleteSupplier($id)
     {
         $supplier = Supplier::findOrFail($id);
-        $supplier->delete();
-        return true;
-    }
-
-    public function getPaginatedSuppliers($perPage = 10)
-    {
-        return Supplier::paginate($perPage);
+        return $supplier->delete();
     }
 }

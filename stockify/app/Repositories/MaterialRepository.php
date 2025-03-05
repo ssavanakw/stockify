@@ -8,7 +8,7 @@ class MaterialRepository implements MaterialRepositoryInterface
 {
     public function getAll()
     {
-        return Material::orderBy('id', 'desc')->paginate(10);
+        return Material::with('category')->paginate(10);
     }
 
     public function getById($id)
@@ -30,6 +30,7 @@ class MaterialRepository implements MaterialRepositoryInterface
 
     public function delete($id)
     {
-        return Material::destroy($id);
+        $material = Material::findOrFail($id);
+        $material->delete();
     }
 }

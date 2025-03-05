@@ -6,30 +6,25 @@ use App\Models\Task;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAll()
+    public function getPendingTasks()
     {
-        return Task::paginate(10);
+        return Task::where('status', 'Pending')->get();
     }
 
-    public function getById($id)
-    {
-        return Task::findOrFail($id);
-    }
-
-    public function create(array $data)
+    public function createTask(array $data)
     {
         return Task::create($data);
     }
 
-    public function update($id, array $data)
+    public function findTaskById($taskId)
     {
-        $task = Task::findOrFail($id);
-        $task->update($data);
-        return $task;
+        return Task::findOrFail($taskId);
     }
 
-    public function delete($id)
+    public function updateTaskStatus($taskId, $status)
     {
-        return Task::destroy($id);
+        $task = Task::findOrFail($taskId);
+        $task->update(['status' => $status]);
+        return $task;
     }
 }

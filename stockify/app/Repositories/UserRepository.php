@@ -3,21 +3,23 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function getAll()
+    public function getAll($perPage = 10)
     {
-        return User::paginate(10);
+        return User::paginate($perPage);
     }
 
-    public function getById($id)
+    public function findById($id)
     {
         return User::findOrFail($id);
     }
 
     public function create(array $data)
     {
+        $data['password'] = Hash::make($data['password']);
         return User::create($data);
     }
 
@@ -28,8 +30,16 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    public function updatePassword($id, $newPassword)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['password' => Hash::make($newPassword)]);
+        return $user;
+    }
+
     public function delete($id)
     {
-        return User::destroy($id);
+        $user = User::findOrFail($id);
+        return $user->delete();
     }
 }

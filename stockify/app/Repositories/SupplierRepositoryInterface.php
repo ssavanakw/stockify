@@ -4,9 +4,13 @@ namespace App\Repositories;
 
 interface SupplierRepositoryInterface
 {
-    public function getAll();
-    public function getById($id);
-    public function create(array $data);
-    public function update($id, array $data);
-    public function delete($id);
+    public function getPaginatedSuppliers($perPage);
+
+    public function createSupplier(array $data);
+
+    public function getSupplierById($id);
+
+    public function updateSupplier($id, array $data);
+
+    public function deleteSupplier($id);
 }

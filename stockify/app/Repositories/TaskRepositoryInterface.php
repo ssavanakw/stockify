@@ -4,9 +4,11 @@ namespace App\Repositories;
 
 interface TaskRepositoryInterface
 {
-    public function getAll();
-    public function getById($id);
-    public function create(array $data);
-    public function update($id, array $data);
-    public function delete($id);
+    public function getPendingTasks();
+
+    public function createTask(array $data);
+
+    public function findTaskById($taskId);
+
+    public function updateTaskStatus($taskId, $status);
 }

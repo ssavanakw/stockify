@@ -13,35 +13,28 @@ class SupplierService
         $this->supplierRepository = $supplierRepository;
     }
 
-    public function getAllSuppliers()
+    public function getPaginatedSuppliers($perPage)
     {
-        return $this->supplierRepository->getAll();
+        return $this->supplierRepository->getPaginatedSuppliers($perPage);
+    }
+
+    public function createSupplier($data)
+    {
+        return $this->supplierRepository->createSupplier($data);
     }
 
     public function getSupplierById($id)
     {
-        return $this->supplierRepository->findById($id);
+        return $this->supplierRepository->getSupplierById($id);
     }
 
-    public function createSupplier(array $data)
+    public function updateSupplier($id, $data)
     {
-        return $this->supplierRepository->create($data);
-    }
-
-    public function updateSupplier($id, array $data)
-    {
-        return $this->supplierRepository->update($id, $data);
+        return $this->supplierRepository->updateSupplier($id, $data);
     }
 
     public function deleteSupplier($id)
     {
-        return $this->supplierRepository->delete($id);
+        return $this->supplierRepository->deleteSupplier($id);
     }
-
-    public function getPaginatedSuppliers($perPage = 10)
-    {
-        return $this->supplierRepository->getPaginatedSuppliers($perPage);
-    }
-    
-    
 }

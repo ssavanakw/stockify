@@ -2,20 +2,19 @@
 
 namespace App\Services;
 
-use App\Repositories\ReportRepositoryInterface;
+use App\Repositories\ReportRepository;
 
 class ReportService
 {
     protected $reportRepository;
 
-    public function __construct(ReportRepositoryInterface $reportRepository)
+    public function __construct(ReportRepository $reportRepository)
     {
         $this->reportRepository = $reportRepository;
     }
 
     public function getAll()
     {
-        // dd('ReportService called!');
         return $this->reportRepository->getAll();
     }
 

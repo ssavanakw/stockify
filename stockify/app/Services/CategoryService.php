@@ -2,17 +2,42 @@
 
 namespace App\Services;
 
-use App\Models\Category;
+use App\Repositories\CategoryRepository;
+use Illuminate\Support\Str;
 
 class CategoryService
 {
-    public function createCategory(array $data)
+    protected $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
     {
-        return Category::create($data);
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function getAllCategories()
     {
-        return Category::all();
+        return $this->categoryRepository->getAll();
+    }
+
+    public function getCategoryById($id)
+    {
+        return $this->categoryRepository->getById($id);
+    }
+
+    public function createCategory(array $data)
+    {
+        $data['slug'] = Str::slug($data['name']);
+        return $this->categoryRepository->create($data);
+    }
+
+    public function updateCategory($id, array $data)
+    {
+        $data['slug'] = Str::slug($data['name']);
+        return $this->categoryRepository->update($id, $data);
+    }
+
+    public function deleteCategory($id)
+    {
+        return $this->categoryRepository->delete($id);
     }
 }

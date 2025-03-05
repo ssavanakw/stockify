@@ -19,11 +19,12 @@
         </div>
         <div class="form-group">
             <label>Type</label>
-            <select name="transaction_type" class="form-control" required>
-                <option value="" disabled {{ old('transaction_type') ? '' : 'selected' }}>Select Type</option>
-                <option value="in" {{ old('transaction_type') == 'in' ? 'selected' : '' }}>Stock In</option>
-                <option value="out" {{ old('transaction_type') == 'out' ? 'selected' : '' }}>Stock Out</option>
+            <select name="type" class="form-control" required>
+                <option value="" disabled {{ old('type') ? '' : 'selected' }}>Select Type</option>
+                <option value="in" {{ old('type') == 'in' ? 'selected' : '' }}>Stock In</option>
+                <option value="out" {{ old('type') == 'out' ? 'selected' : '' }}>Stock Out</option>
             </select>
+
         </div>
 
         <div class="form-group">

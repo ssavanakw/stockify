@@ -83,7 +83,7 @@
         <div class="icon">
             <i class="fas fa-exchange-alt"></i> <!-- Icon transaksi -->
         </div>
-        <a href="/transactions" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="/stock-transactions" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
@@ -105,31 +105,6 @@
     @endif
 </div>
 <!-- Tambahkan Grafik di sini -->
-<div class="row">
-    <!-- Material & Category Overview -->
-    <div class="col-md-6">
-        <div class="card d-flex flex-column shadow-lg">
-            <div class="card-header">
-                <h3 class="card-title">Material & Category Overview</h3>
-            </div>
-            <div class="card-body">
-                <canvas id="materialChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Users & Suppliers Overview -->
-    <div class="col-md-6">
-        <div class="card d-flex flex-column shadow-lg">
-            <div class="card-header">
-                <h3 class="card-title">Users & Suppliers Overview</h3>
-            </div>
-            <div class="card-body">
-                <canvas id="userChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row">
     <div class="col-12">
         <div class="card d-flex flex-column shadow-lg">

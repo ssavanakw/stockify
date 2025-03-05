@@ -6,20 +6,24 @@ use App\Models\StockTransaction;
 
 class StockTransactionRepository
 {
-    public function paginateTransactions($perPage = 10)
+    public function getPaginatedTransactions($perPage = 10)
     {
-        return StockTransaction::with('material')
-            ->orderByDesc('transaction_date') // Order terbaru di atas
-            ->paginate($perPage);
+        return StockTransaction::with('material', 'user')->orderBy('transaction_date', 'desc')->paginate($perPage);
     }
 
-    public function create(array $data)
+    public function createTransaction($data)
     {
         return StockTransaction::create($data);
     }
 
-    public function getAll()
+    public function getTransactionById($id)
     {
-        return StockTransaction::with('material')->latest()->get();
+        return StockTransaction::findOrFail($id);
+    }
+
+    public function deleteTransaction($id)
+    {
+        $transaction = StockTransaction::findOrFail($id);
+        return $transaction->delete();
     }
 }

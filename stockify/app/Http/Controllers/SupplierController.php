@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
@@ -17,9 +16,8 @@ class SupplierController extends Controller
 
     public function index()
     {
-        $suppliers = $this->supplierService->getPaginatedSuppliers(10); // 10 supplier per halaman
+        $suppliers = $this->supplierService->getPaginatedSuppliers(10);
         return view('pages.suppliers.index', compact('suppliers'));
-
     }
 
     public function create()
@@ -61,10 +59,7 @@ class SupplierController extends Controller
 
     public function destroy($id)
     {
-        $supplier = Supplier::findOrFail($id); // Cari supplier atau tampilkan 404
-        $supplier->delete(); // Hapus supplier
-    
+        $this->supplierService->deleteSupplier($id);
         return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
-    
     }
 }

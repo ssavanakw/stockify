@@ -3,26 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
-use App\Repositories\CategoryRepositoryInterface;
-use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    protected $categoryRepository;
+    protected $categoryService;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    public function __construct(CategoryService $categoryService)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->categoryService = $categoryService;
     }
 
     public function index()
     {
-        $categories = $this->categoryRepository->getAll();
-
-        return view('pages.categories.index',compact('categories'));
+        $categories = $this->categoryService->getAllCategories();
+        return view('pages.categories.index', compact('categories'));
     }
 
     public function create()
@@ -36,31 +32,17 @@ class CategoryController extends Controller
             "name" => "required|unique:categories,name",
         ], [
             "name.required" => "Nama kategori harus diisi!",
-            "name.unique" => "Nama kategori harus ada!",
+            "name.unique" => "Nama kategori harus unik!",
         ]);
 
-        // $category = new Category();
-        // $category->name = $request->input('name');
-        // $category->slug = Str::slug($request->input('name'));
-        // $category->save();
+        $this->categoryService->createCategory($validatedData);
 
-        // return redirect('/categories');
-
-        $data = [
-            "name" => $request->input('name'),
-            "slug" => \Illuminate\Support\Str::slug($request->input('name')),
-        ];
-    
-        $this->categoryRepository->create($data);
-    
         return redirect('/categories')->with('success', 'Category added!');
-
     }
 
     public function edit($id)
     {
-        $category = Category::find($id);
-
+        $category = $this->categoryService->getCategoryById($id);
         return view('pages.categories.edit', compact('category'));
     }
 
@@ -70,23 +52,17 @@ class CategoryController extends Controller
             "name" => "required|unique:categories,name",
         ], [
             "name.required" => "Nama kategori harus diisi!",
-            "name.unique" => "Nama kategori harus beda!",
+            "name.unique" => "Nama kategori harus unik!",
         ]);
 
-        $category = Category::find($id);
-        $category->name = $request->input('name');
-        $category->slug = Str::slug($request->input('name'));
-        $category->save();
+        $this->categoryService->updateCategory($id, $validatedData);
 
         return redirect('/categories')->with('success', 'Category has been changed!');
-
     }
-    
+
     public function delete($id)
     {
-        Category::where('id', $id)->delete();
-
-        return redirect('/categories')->with('success', 'Categoy deleted!');
+        $this->categoryService->deleteCategory($id);
+        return redirect('/categories')->with('success', 'Category deleted!');
     }
-
 }

@@ -8,13 +8,12 @@ class ReportRepository implements ReportRepositoryInterface
 {
     public function getAll()
     {
-        // dd('ReportService called!');
-        return Report::orderBy('created_at', 'desc')->paginate(10);
+        return Report::paginate(10);
     }
 
     public function getById($id)
     {
-        return Report::with('user')->findOrFail($id);
+        return Report::findOrFail($id);
     }
 
     public function create(array $data)
@@ -31,11 +30,7 @@ class ReportRepository implements ReportRepositoryInterface
 
     public function delete($id)
     {
-        return Report::destroy($id);
-    }
-
-    public function getReportsByUser($userId)
-    {
-        return Report::where('user_id', $userId)->get();
+        $report = Report::findOrFail($id);
+        return $report->delete();
     }
 }

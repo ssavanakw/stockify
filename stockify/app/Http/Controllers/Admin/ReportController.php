@@ -25,7 +25,7 @@ class ReportController extends Controller
     public function show($id)
     {
         $report = $this->reportService->getById($id);
-        return view('reports.show', compact('report'));
+        return view('pages.reports.show', compact('report'));
     }
 
     public function create()
@@ -37,7 +37,7 @@ class ReportController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required',
+            'description' => 'required|string',
             'status' => 'required|in:pending,completed',
         ]);
 
@@ -50,15 +50,15 @@ class ReportController extends Controller
     public function edit($id)
     {
         $report = $this->reportService->getById($id);
-        return view('reports.edit', compact('report'));
+        return view('pages.reports.edit', compact('report'));
     }
 
     public function update(Request $request, $id)
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required',
-            'status' => 'required|in:pending,resolved',
+            'description' => 'required|string',
+            'status' => 'required|in:pending,completed',
         ]);
 
         $this->reportService->update($id, $data);
@@ -70,5 +70,4 @@ class ReportController extends Controller
         $this->reportService->delete($id);
         return redirect()->route('reports.index')->with('success', 'Report deleted successfully');
     }
-    
 }

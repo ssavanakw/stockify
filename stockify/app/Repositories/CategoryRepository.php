@@ -8,7 +8,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function getAll()
     {
-        return Category::orderBy('id', 'desc')->paginate(10);
+        return Category::paginate(10);
     }
 
     public function getById($id)

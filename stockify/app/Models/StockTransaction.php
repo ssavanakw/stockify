@@ -11,6 +11,7 @@ class StockTransaction extends Model
 
     protected $fillable = [
         'material_id', 
+        'user_id',
         'type', 
         'quantity', 
         'price', 
@@ -21,6 +22,11 @@ class StockTransaction extends Model
     public function material()
     {
         return $this->belongsTo(Material::class);
+    }
+
+    public function user()  // ✅ Add this relationship
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getTransactionTypeAttribute($value)

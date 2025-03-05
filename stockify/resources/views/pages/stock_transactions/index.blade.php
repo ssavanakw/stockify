@@ -31,7 +31,7 @@
                 <tr>
                     <td>{{ ($transactions->currentPage() - 1) * $transactions->perPage() + $index + 1 }}</td>
                     <td>{{ $transaction->material->name }}</td>
-                    <td>{{ $transaction->type === 'in' ? 'Stock In' : 'Stock Out' }}</td>
+                    <td>{{ $transaction->type === 'out' ? 'Stock Out' : 'Stock In' }}</td>
                     <td>{{ $transaction->quantity }}</td>
                     <td>Rp {{ number_format($transaction->price, 0, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M Y') }}</td>
